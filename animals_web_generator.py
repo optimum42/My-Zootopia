@@ -62,7 +62,8 @@ def animal_data_to_str(data):
 
 def animal_data_to_html(data):
     """ writes the animal data to a string and returns it """
-    output = "<ul class='cards'>"
+    output = ""
+    count = 0
     for item in data:
         complete_list = [
             item.get("name"),
@@ -71,18 +72,20 @@ def animal_data_to_html(data):
             item.get("characteristics").get("type"),
         ]
         if not None in complete_list:
-            output += "<li class='cards__item'>"
-            output += (f"Name: {complete_list[0]}<br/>")
-            output += (f"Diet: {complete_list[1]}<br/>")
-            output += (f"Location: ")
+            count += 1
+            if count > 1:
+                output += "\t\t\t"
+            output += "<li class='cards__item'>\n"
+            output += (f"\t\t\t\tName: {complete_list[0]}<br/>\n")
+            output += (f"\t\t\t\tDiet: {complete_list[1]}<br/>\n")
+            output += (f"\t\t\t\tLocation: ")
             for location in complete_list[2][:-1]:
                 output += (f"{location}, ")
             output += (complete_list[2][-1])
-            output += "<br/>"
-            output += (f"Type: {complete_list[3]}") # last one without ','
-            output += "</li>"
-    output += "</ul>"
-    return output
+            output += "<br/>\n"
+            output += (f"\t\t\t\tType: {complete_list[3]}\n") # last one without ','
+            output += "\t\t\t</li>\n"
+    return output[:-1]
 
 
 def main():
