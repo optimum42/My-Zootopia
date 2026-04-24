@@ -17,9 +17,7 @@ def get_skin_types(data):
     """ returns a set of the available skin types """
     skin_types = set()
     for item in data:
-        skin_type = item.get("characteristics").get("skin_type")
-        if skin_type:
-            skin_types.add(skin_type)
+        skin_types.add(item.get("characteristics").get("skin_type"))
     return skin_types
 
 
@@ -85,7 +83,7 @@ def serialize_animal(animal):
         ret += (f"<li><strong>Class:</strong> {animal_class}</li>\n")
     family = animal.get("taxonomy").get("family")
     if animal_class:
-        ret += (f"<li><strong>Class:</strong> {family}</li>\n")
+        ret += (f"<li><strong>Family:</strong> {family}</li>\n")
     locations = animal.get("locations")
     if len(locations) > 0:
         ret += "<li><strong>Location:</strong> "
@@ -106,7 +104,7 @@ def serialize_animal(animal):
 
 
 def animal_data_to_html(data):
-    """ writes all the animal data to a string and returns it """
+    """ writes all the animals from data to a string and returns it """
     output = ""
     for item in data:
         output += serialize_animal(item)
@@ -116,10 +114,12 @@ def animal_data_to_html(data):
 def main():
     loaded_data = load_data("animals_data.json")
 
-    print("My Tiny Anmimal Wiki")
+    print("My Animal Repository")
     print("--------------------\n")
+
     # show selection of available skin types to choose from
     skins = list(get_skin_types(loaded_data))
+    print("0: All Types")
     i = 1
     for skin in skins:
         print(f"{i}: {skin}")
@@ -128,18 +128,20 @@ def main():
     choice = 0
     while True:
         try:
-            choice = int(input("Select a Skin Type: ")) - 1
-            if 0 <= choice < len(skins):
+            choice = int(input("Choose a Skin Type Number: "))
+            if 0 <= choice <= len(skins):
                 break
         except ValueError:
             pass
         print("Invalid choice. Try again.")
 
 
-    skin_type = skins[choice]
-    print(skin_type)
-    filtered_data = [item for item in loaded_data if
-                     item['characteristics']['skin_type'] == skin_type]
+    if choice == 0:
+        filtered_data = loaded_data # animals of all types - no filter
+    else:
+        skin_type = skins[choice - 1]
+        filtered_data = [item for item in loaded_data if
+                         item['characteristics']['skin_type'] == skin_type]
 
     animals_html = animal_data_to_html(filtered_data)
     html_template = load_html("animals_template.html")
@@ -147,7 +149,7 @@ def main():
 
     file_name = "animals.html"
     write_html(html_output, file_name)
-    print(f"Animals for Skin-Type '{skin_type}' written successfully to file '{file_name}'")
+    print(f"Animals written successfully to file '{file_name}'")
 
 
 if __name__ == "__main__":
