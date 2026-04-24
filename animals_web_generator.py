@@ -80,6 +80,7 @@ def animal_data_to_html(data):
             output += (complete_list[2][-1])
             output += "<br/>"
             output += (f"Type: {complete_list[3]}") # last one without ','
+            output += "</li>"
     output += "</ul>"
     return output
 
