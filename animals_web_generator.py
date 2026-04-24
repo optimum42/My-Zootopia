@@ -76,14 +76,16 @@ def animal_data_to_html(data):
             if count > 1:
                 output += "\t\t\t"
             output += "<li class='cards__item'>\n"
-            output += (f"\t\t\t\tName: {complete_list[0]}<br/>\n")
-            output += (f"\t\t\t\tDiet: {complete_list[1]}<br/>\n")
-            output += (f"\t\t\t\tLocation: ")
+            output += (f"\t\t\t\t<div class='card__title'>{complete_list[0]}</div>\n")
+            output += (f"\t\t\t\t<p class='card__text'>\n")
+            output += (f"\t\t\t\t\t<strong>Diet:</strong> {complete_list[1]}<br/>\n")
+            output += (f"\t\t\t\t\t<strong>Location:</strong> ")
             for location in complete_list[2][:-1]:
                 output += (f"{location}, ")
             output += (complete_list[2][-1])
             output += "<br/>\n"
-            output += (f"\t\t\t\tType: {complete_list[3]}\n") # last one without ','
+            output += (f"\t\t\t\t\t<strong>Type:</strong> {complete_list[3]}\n") # last one without ','
+            output += ("\t\t\t\t</p>\n")
             output += "\t\t\t</li>\n"
     return output[:-1]
 
