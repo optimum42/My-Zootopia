@@ -1,4 +1,5 @@
 import json
+from idlelib.replace import replace
 
 
 def load_data(file_path):
@@ -7,13 +8,21 @@ def load_data(file_path):
     return json.load(handle)
 
 
-def main():
-    """
-    reads the data from the JSON file prints all foxes that have name,
-    diet, locations and type fields defined and ignores the other ones
-    """
-    loaded_data = load_data("animals_data.json")
-    for item in loaded_data:
+def load_html(file_path):
+  """ Loads an HTML file """
+  with open(file_path, "r") as handle:
+      return handle.read()
+
+
+def write_html(html, file_path):
+  """ Writes an HTML file """
+  with open(file_path, "w") as handle:
+      handle.write(html)
+
+
+def print_animal_data(data):
+    """ prints the animal data to the screen"""
+    for item in data:
         complete_list = [
             item.get("name"),
             item.get("characteristics").get("diet"),
@@ -29,6 +38,40 @@ def main():
             print(complete_list[2][-1])
             print(f"Type: {complete_list[3]}") # last one without ','
             print()
+
+
+def animal_data_to_str(data):
+    """ writes the animal data to a string and returns it """
+    output = ""
+    for item in data:
+        complete_list = [
+            item.get("name"),
+            item.get("characteristics").get("diet"),
+            item.get("locations"),
+            item.get("characteristics").get("type"),
+        ]
+        if not None in complete_list: # only print if all fields are set
+            output += (f"Name: {complete_list[0]}\n")
+            output += (f"Diet: {complete_list[1]}\n")
+            output += (f"Location: ")
+            for location in complete_list[2][:-1]:
+                output += (f"{location}, ")
+            output += (complete_list[2][-1])
+            output += (f"\nType: {complete_list[3]}\n\n") # last one without ','
+    return output
+
+
+def main():
+    loaded_data = load_data("animals_data.json")
+    animals = animal_data_to_str(loaded_data)
+    print(animals)
+
+    html_template = load_html("animals_template.html")
+    html_output = html_template.replace("__REPLACE_ANIMALS_INFO__", animals)
+
+    file_name = "animals.html"
+    write_html(html_output, file_name)
+    print(f"Animals written successfully to file '{file_name}'")
 
 
 if __name__ == "__main__":
