@@ -1,5 +1,4 @@
 import json
-from idlelib.replace import replace
 
 
 def load_data(file_path):
@@ -61,13 +60,36 @@ def animal_data_to_str(data):
     return output
 
 
+def animal_data_to_html(data):
+    """ writes the animal data to a string and returns it """
+    output = "<ul class='cards'>"
+    for item in data:
+        complete_list = [
+            item.get("name"),
+            item.get("characteristics").get("diet"),
+            item.get("locations"),
+            item.get("characteristics").get("type"),
+        ]
+        if not None in complete_list:
+            output += "<li class='cards__item'>"
+            output += (f"Name: {complete_list[0]}<br/>")
+            output += (f"Diet: {complete_list[1]}<br/>")
+            output += (f"Location: ")
+            for location in complete_list[2][:-1]:
+                output += (f"{location}, ")
+            output += (complete_list[2][-1])
+            output += "<br/>"
+            output += (f"Type: {complete_list[3]}") # last one without ','
+    output += "</ul>"
+    return output
+
+
 def main():
     loaded_data = load_data("animals_data.json")
-    animals = animal_data_to_str(loaded_data)
-    print(animals)
+    animals_html = animal_data_to_html(loaded_data)
 
     html_template = load_html("animals_template.html")
-    html_output = html_template.replace("__REPLACE_ANIMALS_INFO__", animals)
+    html_output = html_template.replace("__REPLACE_ANIMALS_INFO__", animals_html)
 
     file_name = "animals.html"
     write_html(html_output, file_name)
