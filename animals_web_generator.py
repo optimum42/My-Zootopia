@@ -17,7 +17,7 @@ def get_skin_types(data):
     """ returns a set of the available skin types """
     skin_types = set()
     for item in data:
-        skin_types.add(item.get("characteristics").get("skin_type"))
+        skin_types.add(item.get("characteristics", {}).get("skin_type"))
     return skin_types
 
 
@@ -32,9 +32,9 @@ def print_animal_data(data):
     for item in data:
         complete_list = [
             item.get("name"),
-            item.get("characteristics").get("diet"),
+            item.get("characteristics", {}).get("diet"),
             item.get("locations"),
-            item.get("characteristics").get("type"),
+            item.get("characteristics", {}).get("type"),
         ]
         if not None in complete_list: # only print if all fields are set
             print(f"Name: {complete_list[0]}")
@@ -53,9 +53,9 @@ def animal_data_to_str(data):
     for item in data:
         complete_list = [
             item.get("name"),
-            item.get("characteristics").get("diet"),
+            item.get("characteristics", {}).get("diet"),
             item.get("locations"),
-            item.get("characteristics").get("type"),
+            item.get("characteristics", {}).get("type"),
         ]
         if not None in complete_list: # only print if all fields are set
             output += (f"Name: {complete_list[0]}\n")
@@ -75,14 +75,14 @@ def serialize_animal(animal):
     ret += (f"<div class='card__title'>{animal.get('name')}</div>\n")
     ret += "<p class='card__text'>\n"
     ret += "<ul class='cards'>\n"
-    diet = animal.get("characteristics").get("diet")
+    diet = animal.get("characteristics", {}).get("diet")
     if diet:
         ret += (f"<li><strong>Diet:</strong> {diet}</li>\n")
     animal_class = animal.get("taxonomy").get("class")
     if animal_class:
         ret += (f"<li><strong>Class:</strong> {animal_class}</li>\n")
     family = animal.get("taxonomy").get("family")
-    if animal_class:
+    if family:
         ret += (f"<li><strong>Family:</strong> {family}</li>\n")
     locations = animal.get("locations")
     if len(locations) > 0:
@@ -91,10 +91,10 @@ def serialize_animal(animal):
             ret += (f"{location}, ")
         ret += locations[-1]
         ret += "</li>\n"
-    type = animal.get("characteristics").get("type")
+    type = animal.get("characteristics", {}).get("type")
     if type:
         ret += (f"<li><strong>Type:</strong> {type}</li>\n")
-    skin_type = animal.get("characteristics").get("skin_type")
+    skin_type = animal.get("characteristics", {}).get("skin_type")
     if skin_type:
         ret += (f"<li><strong>Skin:</strong> {skin_type}</li>\n")
     ret += "</ul>\n"
